@@ -1,13 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace TicTacToe
 {
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
         int xWins = 0;
@@ -42,14 +54,14 @@ namespace TicTacToe
                         MessageBox.Show("X kazandi!");
                         xWins++;
                         ResetGame();
-                    }
+                }
                     else if (moves == 9)
                     {
                         MessageBox.Show("Berabere");
                         ResetGame();
                     }
-                    else
-                    {
+                else
+                {
                         AITurn();
                     }
                 }
@@ -58,35 +70,55 @@ namespace TicTacToe
 
         public void DrawX(Canvas canvas)
         {
-            double canvasWidth = canvas.ActualWidth;
-            double canvasHeight = canvas.ActualHeight;
+                    double canvasWidth = canvas.ActualWidth;
+                    double canvasHeight = canvas.ActualHeight;
 
-            double thickness = 4;
+                    double thickness = 4;
 
-            Line line1 = new Line
-            {
-                X1 = 20,
-                Y1 = 20,
-                X2 = canvasWidth - 20,
-                Y2 = canvasHeight - 20,
-                Stroke = Brushes.Red,
-                StrokeThickness = thickness
-            };
+                    Line line1 = new Line
+                    {
+                        X1 = 20,
+                        Y1 = 20,
+                        X2 = canvasWidth - 20,
+                        Y2 = canvasHeight - 20,
+                        Stroke = Brushes.Red,
+                        StrokeThickness = thickness
+                    };
 
-            Line line2 = new Line
-            {
-                X1 = canvasWidth - 20,
-                Y1 = 20,
-                X2 = 20,
-                Y2 = canvasHeight - 20,
-                Stroke = Brushes.Red,
-                StrokeThickness = thickness
-            };
+                    Line line2 = new Line
+                    {
+                        X1 = canvasWidth - 20,
+                        Y1 = 20,
+                        X2 = 20,
+                        Y2 = canvasHeight - 20,
+                        Stroke = Brushes.Red,
+                        StrokeThickness = thickness
+                    };
 
-            canvas.Children.Add(line1);
-            canvas.Children.Add(line2);
+                    canvas.Children.Add(line1);
+                    canvas.Children.Add(line2);
 
-            isXTurn = false;
+                    isXTurn = false;
+                    board[row, column] = "x";
+                    moves++;
+                }
+
+
+                if(CheckWinner())
+                {
+                    string winner = isXTurn ? "O" : "X";
+                    MessageBox.Show($"{winner} kazandi!");
+                    ResetGame();
+                }
+                else if(moves==9)
+                {
+                    MessageBox.Show("Berabere");
+                    ResetGame();
+                }
+                else
+                {
+                }
+            }
         }
 
         public bool IsCanvasEmpty(Canvas canvas)
@@ -118,7 +150,7 @@ namespace TicTacToe
             }
             return false;
         }
-
+        
         private void ResetGame()
         {
             isXTurn = true;
@@ -192,7 +224,7 @@ namespace TicTacToe
 
             canvas.Children.Clear();
             canvas.Children.Add(ellipse);
-        }
+            }
 
         private Tuple<int, int> GetBestMove(string[,] currentBoard, int depth)
         {
@@ -203,7 +235,7 @@ namespace TicTacToe
             {
                 bestMove = Tuple.Create(1, 1);
                 return bestMove;
-            }
+        }
 
             for (int i = 0; i < 3; i++)
             {
